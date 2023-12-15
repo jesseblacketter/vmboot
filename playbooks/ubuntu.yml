@@ -1,7 +1,7 @@
 ---
 - name: Update and Install Packages
   hosts: localhost
-  become: true
+  become: yes
   tasks:
     - name: Update package repositories
       apt:
