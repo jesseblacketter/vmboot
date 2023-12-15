@@ -1,6 +1,6 @@
 ---
 - name: Update and Install Packages
-  hosts: all
+  hosts: localhost
   become: true
   tasks:
     - name: Update package repositories
