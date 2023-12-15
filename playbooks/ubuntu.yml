@@ -1,7 +1,7 @@
 ---
 - name: Update and Install Packages
   hosts: all
-  become: yes
+  become: true
   tasks:
     - name: Update package repositories
       apt:
@@ -9,7 +9,7 @@
     - name: Upgrade existing packages
       apt:
         upgrade: yes
-    - name: Install unzip package
-      apt:
-        name: unzip
-        state: present
+    - name: Create verification file
+      file:
+        path: /tmp/test.txt
+        state: touch
