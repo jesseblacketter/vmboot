@@ -9,11 +9,17 @@
     - name: Upgrade existing packages
       apt:
         upgrade: yes
+    - name: Schedule ansible-pull via cron
+      cron:
+        name: "ansible-pull"
+        minute: "*/15"
+        job: "/usr/bin/ansible-pull -U https://github.com/apb/vmboot.git >> /var/log/ansible-pull.log 2>&1"
+        user: root
     - name: Create verification file
       file:
         path: /tmp/test.txt
         state: touch
-    - name: Create additional verification file
-      file:
-        path: /tmp/test2.txt
-        state: touch
+    # - name: Create additional verification file
+    #   file:
+    #     path: /tmp/test2.txt
+    #     state: touch
