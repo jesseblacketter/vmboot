@@ -1,0 +1,68 @@
+---
+- name: Update and Install Packages
+  hosts: localhost
+  become: true
+  tasks:
+    - name: Update package repositories
+      apt:
+        update_cache: yes
+    - name: Upgrade existing packages
+      apt:
+        upgrade: yes
+    - name: Create verification file
+      file:
+        path: /tmp/test.txt
+        state: touch
+    # - name: Create additional verification file
+    #   file:
+    #     path: /tmp/test2.txt
+    #     state: touch
+
+- name: Configure ansible-pull schedule
+  hosts: localhost
+  remote_user: root
+  vars:
+    # Schedule is fed directly to cron
+    schedule: '*/15 * * * *'
+
+    # User to run ansible-pull as from cron
+    cron_user: root
+
+    # File that ansible will use for logs
+    logfile: /var/log/ansible-pull.log
+
+    # Directory to where the repository will be cloned
+    workdir: /var/lib/ansible/local
+
+    # Repository to check out
+    # repo must contain a local.yml file at the top level
+    repo_url: https://github.com/jesseblacketter/vmboot.git
+  tasks:
+    - name: Create local directory to work from
+      file:
+        path: "{{ workdir }}"
+        state: directory
+        owner: root
+        group: root
+        mode: '0751'
+    - name: Copy ansible inventory file to client
+      copy:
+        src: inventory.ini
+        dest: /etc/ansible/hosts
+        owner: root
+        group: root
+        mode: '0644'
+    - name: Create crontab entry to clone/pull git repository
+      template:
+        src: templates/etc_cron.d_ansible-pull.j2
+        dest: /etc/cron.d/ansible-pull
+        owner: root
+        group: root
+        mode: '0644'
+    - name: Create logrotate entry for ansible-pull.log
+      template:
+        src: templates/etc_logrotate.d_ansible-pull.j2
+        dest: /etc/logrotate.d/ansible-pull
+        owner: root
+        group: root
+        mode: '0644'
