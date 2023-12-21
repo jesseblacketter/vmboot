@@ -13,7 +13,7 @@
       file:
         path: /tmp/test.txt
         state: touch
-    - name: Create additional verification file
-      file:
-        path: /tmp/test2.txt
-        state: touch
+    # - name: Create additional verification file
+    #   file:
+    #     path: /tmp/test2.txt
+    #     state: touch
