@@ -13,7 +13,7 @@
       cron:
         name: "ansible-pull"
         minute: "*/15"
-        job: "/usr/bin/ansible-pull -U https://github.com/apb/vmboot.git >> /var/log/ansible-pull.log 2>&1"
+        job: "/usr/bin/ansible-pull -U https://github.com/jesseblacketter/vmboot.git >> /var/log/ansible-pull.log 2>&1"
         user: root
     - name: Create verification file
       file:
