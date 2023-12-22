@@ -45,23 +45,23 @@
         owner: root
         group: root
         mode: '0751'
-    - name: Copy ansible inventory file to client
-      copy:
-        dest: /etc/ansible/hosts
+    # - name: Copy ansible inventory file to client
+    #   copy:
+    #     dest: /etc/ansible/hosts
+    #     owner: root
+    #     group: root
+    #     mode: '0644'
+    - name: Create crontab entry to clone/pull git repository
+      template:
+        src: templates/etc_cron.d_ansible-pull.j2
+        dest: /etc/cron.d/ansible-pull
         owner: root
         group: root
         mode: '0644'
-    # - name: Create crontab entry to clone/pull git repository
-    #   template:
-    #     src: templates/etc_cron.d_ansible-pull.j2
-    #     dest: /etc/cron.d/ansible-pull
-    #     owner: root
-    #     group: root
-    #     mode: '0644'
-    # - name: Create logrotate entry for ansible-pull.log
-    #   template:
-    #     src: templates/etc_logrotate.d_ansible-pull.j2
-    #     dest: /etc/logrotate.d/ansible-pull
-    #     owner: root
-    #     group: root
-    #     mode: '0644'
+    - name: Create logrotate entry for ansible-pull.log
+      template:
+        src: templates/etc_logrotate.d_ansible-pull.j2
+        dest: /etc/logrotate.d/ansible-pull
+        owner: root
+        group: root
+        mode: '0644'
