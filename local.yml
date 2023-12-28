@@ -1,6 +1,6 @@
 ---
 - name: Update and Install Packages
-  hosts: all
+  hosts: localhost
   become: true
   tasks:
     - name: Update package repositories
@@ -20,7 +20,7 @@
 
 - name: Configure ansible-pull schedule
   hosts: all
-  become: true
+  become: localhost
   vars:
     # Schedule is fed directly to cron
     schedule: '*/15 * * * *'
