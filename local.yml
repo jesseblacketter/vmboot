@@ -19,8 +19,8 @@
     #     state: touch
 
 - name: Configure ansible-pull schedule
-  hosts: all
-  become: localhost
+  hosts: localhost
+  become: true
   vars:
     # Schedule is fed directly to cron
     schedule: '*/15 * * * *'
