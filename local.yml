@@ -52,13 +52,6 @@
         owner: root
         group: root
         mode: '0644'
-    - name: Copy ansible inventory file to client
-      copy:
-        src: /var/lib/ansible/local/inventory.ini
-        dest: /etc/ansible/hosts
-        owner: root
-        group: root
-        mode: '0644'
     - name: Create logrotate entry for ansible-pull.log
       template:
         src: templates/etc_logrotate.d_ansible-pull.j2
@@ -66,3 +59,10 @@
         owner: root
         group: root
         mode: '0644'
+    # - name: Copy ansible inventory file to client
+    #   copy:
+    #     src: /var/lib/ansible/local/inventory.ini
+    #     dest: /etc/ansible/hosts
+    #     owner: root
+    #     group: root
+    #     mode: '0644'
