@@ -70,7 +70,7 @@
     - name: Hold SonarQube dependencies at specified version
       apt:
         name: "{{ item }}"
-        state: held
+        state: present
         dpkg_options: "force-hold"
       loop: "{{ sonarqube_dependencies }}"
     # - name: Hold SonarQube dependencies at specified version
