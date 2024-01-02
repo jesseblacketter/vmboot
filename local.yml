@@ -68,10 +68,16 @@
         allow_downgrade: yes
         update_cache: yes
     - name: Hold SonarQube dependencies at specified version
-      dpkg_selections:
-        package: "{{ item }}"
-        selection: "hold"
+      apt:
+        name: "{{ item }}"
+        state: held
+        dpkg_options: "force-hold"
       loop: "{{ sonarqube_dependencies }}"
+    # - name: Hold SonarQube dependencies at specified version
+    #   dpkg_selections:
+    #     package: "{{ item }}"
+    #     selection: "hold"
+    #   loop: "{{ sonarqube_dependencies }}"
     - name: APT upgrade
       apt:
         upgrade: yes
