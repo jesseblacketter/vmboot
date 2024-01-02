@@ -57,7 +57,7 @@
       - "openjdk-17-jdk={{ openjdk_version }}"
       - "postgresql-client-common={{ postgresql_version }}"
     unzip_version: "6.0-26ubuntu3"
-    openjdk_version: "17*"
+    openjdk_version: "17.0.2+8-1"
     postgresql_version: "238"
   tasks:
     - name: Install dependencies
