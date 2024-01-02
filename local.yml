@@ -1,18 +1,7 @@
 ---
-- name: Update APT cache and perform system upgrades
-  hosts: localhost
-  become: true
-  tasks:
-    - name: Update / upgrade
-      apt:
-        update_cache: yes
-        upgrade: yes
-      changed_when: false
-
 - name: Configure ansible-pull schedule
   hosts: localhost
   become: true
-
   vars:
     # Schedule is fed directly to cron
     schedule: '*/15'
@@ -29,7 +18,6 @@
     # Repository to check out
     # repo must contain a local.yml file at the top level
     repo_url: https://github.com/jesseblacketter/vmboot.git
-
   tasks:
     - name: Create local directory to work from
       file:
@@ -56,10 +44,13 @@
 - name: Setup SonarQube Server
   hosts: localhost
   become: yes
-
   vars:
     sonarqube_install_location: "/opt/sonarqube"
     sonarqube_version: "1.0.1"
+    sonarqube_user: "sonarqube"
+    sonarqube_group: "sonarqube"
+    sonarqube_service_name: "sonarqube"
+    sonarqube_service_file_path: "/etc/systemd/system/{{ sonarqube_service_name }}.service"
     # Package dependencies with pinned versions
     sonarqube_dependencies:
       - name: "unzip={{ unzip_version }}"
@@ -68,7 +59,6 @@
     unzip_version: "6*"
     openjdk_version: "17*"
     postgresql_version: "238"
-
   tasks:
     - name: Install dependencies
       apt:
@@ -81,9 +71,10 @@
         selection: "hold"
         allow_change_held_packages: yes
         allow_downgrade: yes
-    - name: Update APT cache and perform system upgrades
+    - name: APT upgrade
       apt:
         upgrade: yes
+      changed_when: false
     - name: Manage data disk
       parted:
         device: /dev/sdb
@@ -133,6 +124,27 @@
         - { path: '/etc/security/limits.conf', line: 'sonarqube  -  nofile  65536' }
         - { path: '/etc/security/limits.conf', line: 'sonarqube  -  nproc   4096' }
         - { path: '/etc/sysctl.conf', line: 'vm.max_map_count = 262144' }
+    - name: Create SonarQube group
+      group:
+        name: "{{ sonarqube_group }}"
+        state: present
+    - name: Create SonarQube user
+      user:
+        name: "{{ sonarqube_user }}"
+        group: "{{ sonarqube_group }}"
+        home: "{{ sonarqube_install_location }}"
+        system: yes
+        createhome: yes
+    - name: Write systemd service unit file
+      template:
+        src: templates/sonarqube.service.j2
+        dest: "{{ sonarqube_service_file_path }}"
+      notify: Reload systemd
+    - name: Enable SonarQube service
+      systemd:
+        name: "{{ sonarqube_service_name }}"
+        enabled: yes
+        state: started
     - name: Reboot (to enable new limits)
       command: shutdown -r +1 "System will reboot in 1 minute"
       async: 0
