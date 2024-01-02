@@ -56,9 +56,9 @@
       - name: "unzip={{ unzip_version }}"
       - name: "openjdk-17-jdk={{ openjdk_version }}"
       - name: "postgresql-client-common={{ postgresql_version }}"
-    unzip_version: "6.*.*"
-    openjdk_version: "17.*.*.*"
-    postgresql_version: "238"
+    unzip_version: 6*
+    openjdk_version: 17*
+    postgresql_version: 238
   tasks:
     - name: Install dependencies
       apt:
