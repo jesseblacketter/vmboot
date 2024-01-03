@@ -64,13 +64,13 @@
       apt:
         name: "{{ sonarqube_dependencies }}"
         state: present
-        allow_change_held_packages: yes
-        allow_downgrade: yes
         update_cache: yes
     - name: Hold SonarQube dependencies at specified version
       apt:
         name: "{{ item }}"
         state: present
+        allow_change_held_packages: yes
+        allow_downgrade: yes
         dpkg_options: "hold"
       loop: "{{ sonarqube_dependencies }}"
     # - name: Hold SonarQube dependencies at specified version
